@@ -1,16 +1,16 @@
 const express = require('express');
 const db = require('./config/connection');
 
-
+const { User } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/all-items', (req, res) => {
+app.get('/User', (req, res) => {
   // Using model in route to find all documents that are instances of that model
-  Item.find({}, (err, result) => {
+  User.find({}, (err, result) => {
     if (err) {
       res.status(500).send({ message: 'Internal Server Error' });
     } else {
