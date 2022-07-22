@@ -7,11 +7,13 @@ const userSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            unique: true
         },
         email: {
             type: String,
             required: 'Email address is required',
-            match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+            match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
+            unique: true
         },
         // thoughts: [ 
         //     {
@@ -32,14 +34,24 @@ const User = model('User', userSchema);
 
 const handleError = (err) => console.error(err);
 
-User.create(
-    {
-      username: 'sajjad',
-      email: 'sajjad@gmail.com',
-      
-    },
-    (err) => (err ? handleError(err) : console.log('Created new document'))
-  );
+
+
+User.find({}).exec((err, collection) => {
+    if (err) {
+      return handleError(err);
+    }
+    if (collection.length === 0) {
+      return User.insertMany(
+        [
+          { 'username': 'sajjad','email': 'sajjad@gmail.com'},
+          { 'username': 'Hamza','email': 'Hamza@gmail.com' },
+        ],
+        (insertError) =>
+          insertError ? handleError(insertError) : console.log('Inserted')
+      );
+    }
+    return console.log('Already populated');
+  });
 
 
 module.exports = User;
